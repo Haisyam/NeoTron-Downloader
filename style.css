@@ -1,0 +1,69 @@
+body {
+  font-family: Arial, sans-serif;
+}
+.bg-gray {
+  background: rgba(243, 244, 246, 1);
+}
+.bg-white {
+  background: rgba(255, 255, 255, 1);
+}
+.bg-black {
+  background: rgba(31, 41, 55, 1);
+}
+.bg-red {
+  background: rgba(255, 0, 0, 1);
+}
+.bg-blue {
+  background: #1877f2;
+}
+.t-m {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+.t-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.t-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+.f-white {
+  color: rgba(243, 244, 246, 1);
+}
+.f-gray {
+  color: rgba(75, 85, 99, 1);
+}
+.f-dark {
+  color: rgba(31, 41, 55, 1);
+}
+.f-green {
+  color: rgba(16, 185, 129, 1);
+}
+.f-bold {
+  font-weight: 700;
+  /* font-size: 2.25rem; */
+}
+.i-red {
+  color: rgba(255, 0, 0, 1);
+}
+.i-fb {
+  color: #1877f2;
+}
+.i-1 {
+  font-size: 1.5rem;
+}
+
+.btn-blue:hover {
+  background: #004094;
+  color: #fff; /* White text color on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+}
+
+.btn-red:hover {
+  background: rgb(173, 0, 0);
+  color: #fff; /* White text color on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+}

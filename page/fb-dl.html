@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Video Downloader</title>
+    <link rel="shortcut icon" href="/img/facebook.png" type="image/x-icon" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+      body {
+        background: rgba(243, 244, 246, 1);
+      }
+      #videoPreview {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg bg-white shadow">
+        <div class="container">
+          <a class="navbar-brand t-xl f-bold f-green" href="/index.html#home">Neotron</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link active" aria-current="page" href="/index.html#home"
+                >Home</a
+              >
+              <a class="nav-link" href="/index.html#about">About</a>
+              <a
+                class="nav-link"
+                href="https://porto-haisyam.vercel.app"
+                target="_blank"
+                >Creator</a
+              >
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="container mt-5">
+      <h1 class="text-center mb-5 t-4xl f-bold f-dark">
+        Facebook Video Downloader
+      </h1>
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="facebookUrl"
+              placeholder="Masukkan URL video Facebook"
+            />
+            <button class="btn btn-primary" onclick="fetchVideo()">
+              Get Video
+            </button>
+          </div>
+          <p id="status" class="text-center"></p>
+          <div id="videoPreview" class="text-center mt-3">
+            <button class="btn btn-success mb-3" onclick="downloadVideo()">
+              Download Video
+            </button>
+            <img
+              id="previewThumbnail"
+              class="img-fluid mb-3"
+              alt="Video Thumbnail"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      let videoUrl = "";
+
+      async function fetchVideo() {
+        const facebookUrl = document.getElementById("facebookUrl").value;
+        const status = document.getElementById("status");
+        const videoPreview = document.getElementById("videoPreview");
+        const previewThumbnail = document.getElementById("previewThumbnail");
+
+        status.textContent = "Mengambil video...";
+        videoPreview.style.display = "none";
+
+        try {
+          const apiUrl = `https://api.ngodingaja.my.id/api/fb?url=${encodeURIComponent(
+            facebookUrl
+          )}`;
+          const response = await axios.get(apiUrl);
+
+          if (
+            response.data &&
+            response.data.status &&
+            response.data.status === true &&
+            response.data.hasil &&
+            response.data.hasil.length > 0
+          ) {
+            const hdVideo = response.data.hasil.find((video) =>
+              video.resolution.includes("HD")
+            );
+            if (hdVideo) {
+              videoUrl = hdVideo.url;
+              previewThumbnail.src = hdVideo.thumbnail;
+              videoPreview.style.display = "block";
+
+              status.textContent = "Video berhasil diambil!";
+              status.className = "text-center text-success";
+            } else {
+              throw new Error("Video HD tidak ditemukan");
+            }
+          } else {
+            throw new Error("Gagal mendapatkan URL video");
+          }
+        } catch (error) {
+          console.error("Error saat mengambil video Facebook:", error);
+          status.textContent =
+            "Error saat mengambil video Facebook: " + error.message;
+          status.className = "text-center text-danger";
+        }
+      }
+
+      async function downloadVideo() {
+        const status = document.getElementById("status");
+        status.textContent = "Mengunduh...";
+
+        try {
+          const response = await axios({
+            url: videoUrl,
+            method: "GET",
+            responseType: "blob",
+          });
+
+          const blob = new Blob([response.data], { type: "video/mp4" });
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "facebook_video_hd.mp4");
+          document.body.appendChild(link);
+          link.click();
+
+          status.textContent = "Video berhasil diunduh!";
+          status.className = "text-center text-success";
+        } catch (error) {
+          console.error("Error saat mengunduh video Facebook:", error);
+          status.textContent =
+            "Error saat mengunduh video Facebook: " + error.message;
+          status.className = "text-center text-danger";
+        }
+      }
+    </script>
+  </body>
+</html>
