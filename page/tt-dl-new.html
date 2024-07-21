@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TikTok Downloader</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: url("https://i.ibb.co.com/Xsr1GxR/AI-MI-05.jpg") no-repeat
+          center center fixed;
+        background-size: cover;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+        backdrop-filter: blur(12px); /* Enhanced blur effect */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+        border-radius: 12px; /* Rounded corners */
+        padding: 2rem; /* Added padding */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        max-width: 100%;
+        width: 90vw;
+        max-width: 600px;
+        box-sizing: border-box;
+      }
+      .video-result {
+        max-width: 100%; /* Ensure video fits within its container */
+        max-height: 400px; /* Limit the height of the video */
+        width: 100%; /* Ensure it takes up the full width of its container */
+        height: auto; /* Maintain aspect ratio */
+        object-fit: contain; /* Make sure video is contained within the given dimensions */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay">
+      <div class="container">
+        <h1 class="text-4xl font-bold text-center mb-8">TikTok Downloader</h1>
+        <div class="max-w-xl mx-auto">
+          <form id="download-form" class="space-y-4">
+            <div>
+              <label for="url" class="block text-sm font-medium text-gray-700"
+                >TikTok URL</label
+              >
+              <input
+                type="url"
+                id="url"
+                name="url"
+                placeholder="paste link disini"
+                required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div class="flex justify-between items-center">
+              <button
+                type="submit"
+                class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              >
+                Gasken
+              </button>
+            </div>
+          </form>
+          <div id="result" class="mt-5 hidden">
+            <h2 class="text-2xl font-bold mb-4">Hasilnya...</h2>
+            <a
+              id="video-link"
+              href="#"
+              target="_blank"
+              class="bg-green-500 hover:bg-green-600 py-2 px-4 rounded text-white mb-2"
+              >Download Video</a
+            >
+            <a
+              id="music-link"
+              href="#"
+              target="_blank"
+              class="bg-green-500 hover:bg-green-600 py-2 px-4 rounded text-white mb-2"
+              >Download Music</a
+            >
+            <video
+              id="video-result"
+              controls
+              class="video-result mt-5 mb-4 hidden"
+            ></video>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById("download-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const url = document.getElementById("url").value;
+
+          fetch(
+            `https://api.tiklydown.eu.org/api/download/v3?url=${encodeURIComponent(
+              url
+            )}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === 200) {
+                const result = data.result;
+                document.getElementById("video-link").href = result.video;
+                document.getElementById("music-link").href = result.music;
+
+                const videoResult = document.getElementById("video-result");
+                videoResult.src = result.video;
+                videoResult.classList.remove("hidden");
+
+                document.getElementById("result").classList.remove("hidden");
+              } else {
+                alert(
+                  "Failed to fetch download links. Please check the URL and try again."
+                );
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("An error occurred. Please try again.");
+            });
+        });
+    </script>
+  </body>
+</html>
